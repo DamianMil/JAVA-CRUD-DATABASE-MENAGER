@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 
 @Entity
@@ -15,12 +18,16 @@ public class Contact {
 	@Column(name = "id")
 	private int id;
 	
+	@NotBlank(message = "Name is required.")
 	@Column(name = "name")
 	private String name;
 	
+	@Email(message = "Invalid email address.")
 	@Column(name = "email")
 	private String email;
 	
+	@Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$",
+	message = "Invalid phone number.")
 	@Column(name = "phone")
 	private String phone;
 	

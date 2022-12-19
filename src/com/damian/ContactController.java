@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import javax.validation.Valid;
 
 @Controller
 public class ContactController {
@@ -21,11 +23,12 @@ public class ContactController {
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST)
-	public String createContact(@RequestParam("name") String name,
-								@RequestParam("email") String email,
-								@RequestParam("phone") String phone,
-								Model model) {
-		Contact contact = new Contact(name, email, phone);
+	public String createContact(@Valid Contact contact, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("message", "There were errors in the form.");
+			return "create";
+		}
+	
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -37,6 +40,7 @@ public class ContactController {
 		return "create";
 		
 	}
+	
 	@RequestMapping(value="/read", method=RequestMethod.GET)
 	public String readContact(@RequestParam("id") int id, Model model) {
 		Session session = sessionFactory.openSession();
